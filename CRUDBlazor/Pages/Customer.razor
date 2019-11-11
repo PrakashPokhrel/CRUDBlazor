@@ -1,0 +1,58 @@
+﻿@page "/Customer"
+@using CRUDBlazor.Data
+@inject CustomerService ObjCustomService
+
+<NavLink class="nav-link" href="AddCustomer">
+    <span class="oi oi-plus" aria-hidden="true"></span> Add New
+</NavLink>
+
+<h1>Customer Data</h1>
+@if (objCtmr == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var temp in objCtmr)
+            {
+                <tr>
+                    <td>@temp.CustomerId</td>
+                    <td>@temp.Name</td>
+                    <td>@temp.Gender</td>
+                    <td>@temp.Country</td>
+                    <td>@temp.City</td>
+                    <td>
+                        <a class="nav-link" href="EditCustomer/@temp.CustomerId">
+                            <span class="oi oi-pencil" aria-hidden="true"></span> Edit
+                        </a>
+                        <a class="nav-link" href="DeleteCustomer/@temp.CustomerId">
+                            <span class="oi oi-trash" aria-hidden="true"></span> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    List<CustomerInfo> objCtmr;
+    protected override async Task OnInitializedAsync()
+    {
+        CustomerService objCS = new CustomerService();
+        objCtmr = await Task.Run(()=> objCS.GetCustomer());
+        //CustomerDataAccessLayer objCustomerDAL = new CustomerDataAccessLayer();
+        //objCtmr = objCustomerDAL.GetAllCustomers().ToList();
+    }
+}

@@ -1,0 +1,63 @@
+﻿@page "/EditCustomer/{CurretnID}"
+@using CRUDBlazor.Data
+@using System;
+@inject CustomerService ObjCustomService
+@inject NavigationManager NavigationManager
+<h2>Create Customer</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <input for="Name" class="form-control" @bind="@objCI.CustomerId" />
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Name</label>
+                <input for="Name" class="form-control" @bind="@objCI.Name" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label"></label>
+                <select @bind="@objCI.Gender" class="form-control">
+                    <option value="">-- Select Gender --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Country" class="control-label">Country</label>
+                <input for="Country" class="form-control" @bind="@objCI.Country" />
+            </div>
+            <div class="form-group">
+                <label for="City" class="control-label">City</label>
+                <input for="City" class="form-control" @bind="@objCI.City" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" @onclick="@UpdateCustomer" class="btn btn-primary" value="Save" />
+                <input type="button" @onclick="@Cancel" class="btn btn-primary" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+@code {
+    [Parameter]
+    public string CurretnID { get; set; }
+    CustomerInfo objCI = new CustomerInfo();
+    
+    protected override async Task OnInitializedAsync()
+    {   
+        objCI =await Task.Run(()=> ObjCustomService.GetCustomerByID(Convert.ToInt32(CurretnID)));        
+    }
+    protected void UpdateCustomer()
+    {
+        ObjCustomService.UpdateCustomer(objCI);
+        NavigationManager.NavigateTo("Customer");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Customer");
+    }
+}   
